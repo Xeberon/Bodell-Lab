@@ -1,0 +1,4 @@
+{
+  "Interpreter": "kivy_venv\\Scripts\\python.exe",
+  "TestFramework": "Pytest"
+}
