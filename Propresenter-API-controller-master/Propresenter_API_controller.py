@@ -69,7 +69,7 @@ if __name__ == "__main__":
 #    Pro_api_exe().run()
 
 
-##try input instead of keyboard.is_pressed...
+##try input().strip() instead of keyboard.is_pressed...
 #print("press y to write to file")
 #while True:
 #    try:
