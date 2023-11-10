@@ -20,8 +20,10 @@ import json
 ####url setup
 #local_ip_addr = "http://192.168.0.118"
 #local_ip_port = "7777"
-local_ip_addr = "http://192.168.0.73"
-local_ip_port = "1077"
+#local_ip_addr = "http://192.168.0.73"
+#local_ip_port = "1077"
+local_ip_addr = "http://localhost"
+local_ip_port = "1026"
 pro_api_url = local_ip_addr+":"+local_ip_port
 
 
@@ -34,19 +36,27 @@ pro_api_looks = pro_api_url+"/v1/themes"
 firstscreen = 0
 
 ####function
-#response = requests.get(pro_api_looks)
-#response.json()
+response = requests.get(pro_api_looks)
+response.json()
+print(response.json)
 #json.load(response.content)
 #json.part
 #data = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')
 #dir(response)
 #print(response.json())
+#print(type(response.json))
 
-####function
-response = requests.get(pro_api_looks)
-response.content
-json.load(response.content)
-print(response.content)
+####function okay so the thing is that the only object keys we have are groups and themes meaning that we have to make objects ourselves using bytes :(
+#response = requests.get(pro_api_looks)
+#response.content
+#print(response.content)
+#json.load(response.content)
+#beans = response.json()
+#print(beans)
+#print("[n\\")
+#print("Dict key-value are : ")
+#tincan = beans.keys()
+#print(tincan)
 
 #import json
 
@@ -63,11 +73,11 @@ print(response.content)
 #s = json.dumps(data, indent=4, sort_keys=True)
 #print(s)
 
-dir(response.json())
+#dir(response.json())
 
-for group in print(response.content()["groups"]):
-    print(group)
-    break
+#for group in print(response.content()["groups"]):
+#    print(group)
+#    break
 
 ####pretty conversion
 #read_looks = pprint.pformat(response.json(), width = 1)
