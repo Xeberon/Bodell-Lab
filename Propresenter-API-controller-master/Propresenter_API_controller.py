@@ -37,8 +37,14 @@ firstscreen = 0
 
 ####function
 response = requests.get(pro_api_looks)
-response.json()
-print(response.json)
+scissors = response.json()
+print(type(scissors))
+iterscissor = response.text
+decscissor = json.loads(iterscissor)
+encscissor = json.dumps(decscissor,indent=1, sort_keys=True)
+print(type(encscissor))
+print("~" *7)
+
 #json.load(response.content)
 #json.part
 #data = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')
