@@ -31,19 +31,32 @@ pro_api_url = local_ip_addr+":"+local_ip_port
 ###192.168.0.73:1077/v1/doc/index.html
 pro_api_active_look = pro_api_url+"/v1/look/current"
 pro_api_looks = pro_api_url+"/v1/looks"
-pro_api_looks = pro_api_url+"/v1/themes"
+# pro_api_looks = pro_api_url+"/v1/themes"
 
 firstscreen = 0
 
-####function
-response = requests.get(pro_api_looks)
-scissors = response.json()
-print(type(scissors))
-iterscissor = response.text
-decscissor = json.loads(iterscissor)
-encscissor = json.dumps(decscissor,indent=1, sort_keys=True)
-print(type(encscissor))
-print("~" *7)
+
+lookresponse = requests.get(pro_api_looks)
+print(lookresponse.content)
+print("~"*7)
+lookcastle = json.loads(lookresponse.content)
+print(lookcastle)
+for i in lookcastle:
+    print(lookcastle)
+
+
+
+print("wait")
+
+# ####function
+# response = requests.get(pro_api_looks)
+# scissors = response.json()
+# print(type(scissors))
+# iterscissor = response.text
+# decscissor = json.loads(iterscissor)
+# encscissor = json.dumps(decscissor,indent=1, sort_keys=True)
+# print(type(encscissor))
+# print("~" *7)
 
 #json.load(response.content)
 #json.part
@@ -52,19 +65,6 @@ print("~" *7)
 #print(response.json())
 #print(type(response.json))
 
-####function okay so the thing is that the only object keys we have are groups and themes meaning that we have to make objects ourselves using bytes :(
-#response = requests.get(pro_api_looks)
-#response.content
-#print(response.content)
-#json.load(response.content)
-#beans = response.json()
-#print(beans)
-#print("[n\\")
-#print("Dict key-value are : ")
-#tincan = beans.keys()
-#print(tincan)
-
-#import json
 
 #my_bytes_value = b'[{\'Date\': \'2016-05-21T21:35:40Z\', \'CreationDate\': \'2012-05-05\', \'LogoType\': \'png\', \'Ref\': 164611595, \'Classe\': [\'Email addresses\', \'Passwords\'],\'Link\':\'http://some_link.com\'}]'
 
@@ -84,9 +84,6 @@ print("~" *7)
 #for group in print(response.content()["groups"]):
 #    print(group)
 #    break
-
-####pretty conversion
-#read_looks = pprint.pformat(response.json(), width = 1)
 
 
 ##try input().strip() instead of keyboard.is_pressed...
