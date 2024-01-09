@@ -1,110 +1,153 @@
+#made in Python 3.11
 #dependencies: kivy (2.2.1), requests (2.31.0), virtualenv (20.24.5), keyboard(0.13.5), pprint
 
 #setup importing
-import os
-from multiprocessing.connection import wait
-from tkinter import FALSE
 import requests
-import pprint
-import time
-import keyboard
-import kivy
 import json
-
-#kivy programming file importing
-#import prolayoutguix
 
 
 
 #Variable Assignment
-####url setup
-#local_ip_addr = "http://192.168.0.118"
-#local_ip_port = "7777"
-#local_ip_addr = "http://192.168.0.73"
-#local_ip_port = "1077"
-local_ip_addr = "http://localhost"
-local_ip_port = "1026"
+
+class ipsetup:
+    def addresssetup():
+        #user input sets ip address
+        ipaddr = input("Please enter your target machine ip address: ").strip()
+        if len(ipaddr) == 0:
+            local_ip_addr = "http://localhost"
+        else:
+            local_ip_addr = ipaddr
+        return local_ip_addr
+    def portsetup():
+        #user input sets port
+        ipport = input("Please enter your target machine ip Port: ").strip()
+        if len(ipport) == 0:
+            local_ip_port = "7777"
+        else:
+            local_ip_port = ipport
+        return local_ip_port
+    
+#merges ip and port together for easy reference
+local_ip_addr = ipsetup.addresssetup()
+local_ip_port = ipsetup.portsetup()
 pro_api_url = local_ip_addr+":"+local_ip_port
+
+#tests for connection
+requests.get(pro_api_url+"/v1/find_my_mouse",timeout = 1)
 
 
 ####api variable setup
-###192.168.0.73:1077/v1/doc/index.html
 pro_api_active_look = pro_api_url+"/v1/look/current"
 pro_api_looks = pro_api_url+"/v1/looks"
-# pro_api_looks = pro_api_url+"/v1/themes"
+pro_api_themes = pro_api_url+"/v1/themes"
+pro_api_masks = pro_api_url+"/v1/masks"
+pro_api_screens = pro_api_url+"/v1/status/screens"
+pro_api_stage_screens = pro_api_url+"/v1/stage/screens"
+
+pro_api_find_mouse = pro_api_url+"/v1/find_my_mouse"
+
 
 firstscreen = 0
 
+class popinfo:
+    #populate screens data - Specifically gathers number of screens and subtracts any stage screens. Then assigns number and name in variable
+    def screensgather():
+        stagescreens = requests.get(pro_api_stage_screens, timeout = 0.1)
+        stagescreenscontent = stagescreens.json()
+        numofstagescreens = len(stagescreenscontent)
+        allscreens = requests.get(pro_api_screens, timeout = 0.1)
+        screenscontent = allscreens.json()
+        numofscreens = len(screenscontent)
+        actualscreennum = numofscreens - numofstagescreens
+        loop = 0
+        screennames = []
+        for x in range(actualscreennum):
+            layer1 = screenscontent[loop]
+            layer2 = layer1["id"]
+            data1 = layer2["name"]
+            screennames.append(data1)
+            loop += 1
+        return numofscreens, screennames
 
-lookresponse = requests.get(pro_api_looks)
-print(lookresponse.content)
-print("~"*7)
-lookcastle = json.loads(lookresponse.content)
-print(lookcastle)
-for i in lookcastle:
-    print(lookcastle)
+        
+    #populate the looks data
+    def looksgather():
+        alllooks = requests.get(pro_api_looks, timeout = 0.1)
+        lookscontent = alllooks.json()
+        numoflook = len(lookscontent)
+        loop = 0
+        looknames = []
+        lookindex = []
+        for x in lookscontent:
+            layer1 = lookscontent[loop]
+            layer2 = layer1["id"]
+            data1 = layer2["name"]
+            data2 = layer2["index"]
+            looknames.append(data1)
+            lookindex.append(data2)
+            loop += 1
+        
+        return lookscontent, numoflook, looknames, lookindex
+    
+    #populate the themes data
+    def themesgather():
+        allthemes = requests.get(pro_api_themes, timeout = 0.1)
+        themescontent = allthemes.json()
+        #getting the number of themes - its a bit wonky becuase of the difference between themes and groups of themes (folder vs folder of folders)(it can also go indefinitely?)
+        layer1 = themescontent["themes"]
+        themesnum = len(layer1)
+        layer2 = themescontent["groups"]
+        loop = 0
+        layeredlen = []
+        for x in layer2:
+            layer3 = layer2[loop]
+            if layer3["groups"] == []:
+                insidethegroup = len(layer3["themes"])
+                layeredlen.append(insidethegroup)
+            else:
+                insideinsidethegroup = layer3["groups"]
+                circuits = 0
+                for x in insideinsidethegroup:
+                    insideinsidethegroup[circuits]
+                    if layer3["groups"] == []:
+                        insidethegroup = len(layer3["themes"])
+                        layeredlen.append(insidethegroup)
+                        circuits += 1
+                    else:print("I give up")
+            loop += 1
+        numofthemes = themesnum
+        numofgthemes = layeredlen
+        
+        return themescontent, numofthemes, numofgthemes
+    
+    #populate the masks data
+    def masksgather():
+        allmasks = requests.get(pro_api_masks, timeout = 0.1)
+        maskscontent = allmasks.json()
+        numofmasks = len(maskscontent)
+        loop = 0
+        masknames = []
+        maskindex = []
+        for x in maskscontent:
+            layer1 = maskscontent[loop]
+            data1 = layer1["name"]
+            data2 = layer1["index"]
+            masknames.append(data1)
+            maskindex.append(data2)
+            loop += 1
+        return numofmasks, masknames, maskindex
 
+#exports gethered data as usable variables
+numofscreens, screennames = popinfo.screensgather()
+print("25%")
+lookscontent, numoflook, looknames, lookindex = popinfo.looksgather()
+print("50%")
+#numofgthemes is a list because it contains the number of themes contained within each group. required to access the slides within each
+themescontent, numofthemes, numofgthemes = popinfo.themesgather()
+print("75%")
+numofmasks, masknames, maskindex = popinfo.masksgather()
+print("100%")
 
+print(fjfjfjfjf)
 
-print("wait")
-
-# ####function
-# response = requests.get(pro_api_looks)
-# scissors = response.json()
-# print(type(scissors))
-# iterscissor = response.text
-# decscissor = json.loads(iterscissor)
-# encscissor = json.dumps(decscissor,indent=1, sort_keys=True)
-# print(type(encscissor))
-# print("~" *7)
-
-#json.load(response.content)
-#json.part
-#data = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')
-#dir(response)
-#print(response.json())
-#print(type(response.json))
-
-
-#my_bytes_value = b'[{\'Date\': \'2016-05-21T21:35:40Z\', \'CreationDate\': \'2012-05-05\', \'LogoType\': \'png\', \'Ref\': 164611595, \'Classe\': [\'Email addresses\', \'Passwords\'],\'Link\':\'http://some_link.com\'}]'
-
-# Decode UTF-8 bytes to Unicode, and convert single quotes 
-# to double quotes to make it valid JSON
-#my_json = my_bytes_value.decode('utf8').replace("'", '"')
-#print(my_json)
-#print('- ' * 20)
-
-# Load the JSON to a Python list & dump it back out as formatted JSON
-#data = json.loads(my_json)
-#s = json.dumps(data, indent=4, sort_keys=True)
-#print(s)
-
-#dir(response.json())
-
-#for group in print(response.content()["groups"]):
-#    print(group)
-#    break
-
-
-##try input().strip() instead of keyboard.is_pressed...
-#print("input y to save to file")
-#savelooks = input().strip
-#if savelooks == "y":
-#    with open("looks.txt", "a") as looks_file:
-#        looks_file.write(read_looks)
-
-
-#print("press y to write to file")
-#while True:
-#    try:
-#        if keyboard.is_pressed("y"):
-#            print("saving file")
-#            with open("looks.txt", "a") as looks_file:
-#                looks_file.write(read_looks)
-#            break
-#        else:
-#            break
-#    except:
-#            break
-#
-
+requests.get(pro_api_find_mouse)
