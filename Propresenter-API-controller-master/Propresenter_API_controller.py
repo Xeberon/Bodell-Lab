@@ -1,11 +1,11 @@
 #made in Python 3.11
-#dependencies: kivy (2.2.1), requests (2.31.0), virtualenv (20.24.5), keyboard(0.13.5), pprint
+#dependencies: kivy (2.2.1), requests (2.31.0)
 
 #setup importing
 import requests
 import json
 
-
+#Add requirements file
 
 #Variable Assignment
 
@@ -14,7 +14,9 @@ class ipsetup:
         #user input sets ip address
         ipaddr = input("Please enter your target machine ip address: ").strip()
         if len(ipaddr) == 0:
-            local_ip_addr = "http://localhost"
+            local_ip_addr = "localhost"
+        if ipaddr == "0":
+            local_ip_addr = "192.168.0.73"
         else:
             local_ip_addr = ipaddr
         return local_ip_addr
@@ -30,7 +32,7 @@ class ipsetup:
 #merges ip and port together for easy reference
 local_ip_addr = ipsetup.addresssetup()
 local_ip_port = ipsetup.portsetup()
-pro_api_url = local_ip_addr+":"+local_ip_port
+pro_api_url = "http://"+local_ip_addr+":"+local_ip_port
 
 #tests for connection
 requests.get(pro_api_url+"/v1/find_my_mouse",timeout = 1)
