@@ -2,6 +2,8 @@
 #dependencies: kivy (2.2.1), requests (2.31.0)
 
 #setup importing
+import sys
+import time
 import requests
 import json
 
@@ -34,9 +36,18 @@ local_ip_addr = ipsetup.addresssetup()
 local_ip_port = ipsetup.portsetup()
 pro_api_url = "http://"+local_ip_addr+":"+local_ip_port
 
+def connectiontest():
 #tests for connection
-requests.get(pro_api_url+"/v1/find_my_mouse",timeout = 1)
+    try:
+        mouser = requests.get(pro_api_url,timeout = 5)
+    except:
+        print("connection was refused")
+        time.sleep(3)
+        sys.exit()
+    else:
+        requests.get(pro_api_url+"/v1/find_my_mouse",timeout = 5)
 
+connectiontest()
 
 ####api variable setup
 pro_api_active_look = pro_api_url+"/v1/look/current"
@@ -54,10 +65,10 @@ firstscreen = 0
 class popinfo:
     #populate screens data - Specifically gathers number of screens and subtracts any stage screens. Then assigns number and name in variable
     def screensgather():
-        stagescreens = requests.get(pro_api_stage_screens, timeout = 0.1)
+        stagescreens = requests.get(pro_api_stage_screens, timeout = 5)
         stagescreenscontent = stagescreens.json()
         numofstagescreens = len(stagescreenscontent)
-        allscreens = requests.get(pro_api_screens, timeout = 0.1)
+        allscreens = requests.get(pro_api_screens, timeout = 5)
         screenscontent = allscreens.json()
         numofscreens = len(screenscontent)
         actualscreennum = numofscreens - numofstagescreens
