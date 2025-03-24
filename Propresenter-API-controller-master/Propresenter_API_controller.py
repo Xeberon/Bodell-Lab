@@ -38,7 +38,8 @@ local_ip_port = ipsetup.portsetup()
 pro_api_url = "http://"+local_ip_addr+":"+local_ip_port
 
 
-def connectiontest():
+
+def connectiontest(connection):
 #tests for connection
     try:
         requests.get(pro_api_url,timeout = 1)
@@ -49,7 +50,6 @@ def connectiontest():
     else:
         print("success")
 
-connectiontest()
 
 ####api variable setup
 pro_api_active_look = pro_api_url+"/v1/look/current"
@@ -64,35 +64,60 @@ pro_api_find_mouse = pro_api_url+"/v1/find_my_mouse"
 
 firstscreen = 0
 
+
+
+
 def grabmasks():
+    masklist = []
     #assume the data first
     maskscontent = requests.get(pro_api_masks).json()
     print(type(maskscontent))
     for maskshold in maskscontent:
         if type(maskshold) == dict:
             for key in maskshold:
-                masks.uuid(maskshold[key])
+                
+                if key == "uuid":
+                    tempuuid = key
+                elif key == "name":
+                    tempname = key
+                elif key == "index":
+                    tempindex = key
+                # elif key == "content":
+                #     masks.add_content = (maskshold[key])
+        masks(tempuuid, tempname, tempindex)
+    print("ick")
+                
 
 class masks:
+    """A Class for Masks"""
     #info that I need from masks is uuid, name, indexs
     def __init__(self, uuid, name, index):
         #init function to grab the data lol
         self.uuid = uuid
         self.name = name
         self.index = index
-    
+        # self.content = []
+
+        
+    # def add_content(self, content):
+    #     self.content.append(content)
+        
+
 
     
 grabmasks()
-    
-print(grabmasks())
 
-# #exports gethered data as usable variables
+# print(masks.uuid)
+# print(masks.name)
+# print(masks.index)
+print("ew")
+
+# exports gethered data as usable variables
 # numofscreens, screennames = popinfo.screensgather()
 # print("25%")
 # lookscontent, numoflook, looknames, lookindex = popinfo.looksgather()
 # print("50%")
-# #numofgthemes is a list because it contains the number of themes contained within each group. required to access the slides within each
+# numofgthemes is a list because it contains the number of themes contained within each group. required to access the slides within each
 # themescontent, numofthemes, numofgthemes = popinfo.themesgather()
 # print("75%")
 # numofmasks, masknames, maskindex = popinfo.masksgather()
