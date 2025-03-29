@@ -74,17 +74,13 @@ def grabmasks():
     print(type(maskscontent))
     for maskshold in maskscontent:
         if type(maskshold) == dict:
-            for key in maskshold:
-                
-                if key == "uuid":
-                    tempuuid = key
-                elif key == "name":
-                    tempname = key
-                elif key == "index":
-                    tempindex = key
+            tempuuid = maskshold.get("uuid")
+            tempname = maskshold.get("name")
+            tempindex = maskshold.get("index")
                 # elif key == "content":
                 #     masks.add_content = (maskshold[key])
-        masks(tempuuid, tempname, tempindex)
+        masklist.append(masks(tempuuid, tempname, tempindex))
+        print(masklist)
     print("ick")
                 
 
