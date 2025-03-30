@@ -7,34 +7,36 @@ import sys
 import time
 import requests
 import json
+from ClassMasks import masks
+from ClassLooks import looks
 
 #Add requirements file
 
 #Variable Assignment
 
-class ipsetup:
-    def addresssetup():
-        #user input sets ip address
-        ipaddr = input("Please enter your target machine ip address: ").strip()
-        if len(ipaddr) == 0:
-            local_ip_addr = "localhost"
-        elif ipaddr == "0":
-            local_ip_addr = "192.168.0.73"
-        else:
-            local_ip_addr = ipaddr
-        return local_ip_addr
-    def portsetup():
-        #user input sets port
-        ipport = input("Please enter your target machine ip Port: ").strip()
-        if len(ipport) == 0:
-            local_ip_port = "7777"
-        else:
-            local_ip_port = ipport
-        return local_ip_port
+
+def addresssetup():
+    #user input sets ip address
+    ipaddr = input("Please enter your target machine ip address: ").strip()
+    if len(ipaddr) == 0:
+        local_ip_addr = "localhost"
+    elif ipaddr == "0":
+        local_ip_addr = "192.168.0.73"
+    else:
+        local_ip_addr = ipaddr
+    return local_ip_addr
+def portsetup():
+    #user input sets port
+    ipport = input("Please enter your target machine ip Port: ").strip()
+    if len(ipport) == 0:
+        local_ip_port = "7777"
+    else:
+        local_ip_port = ipport
+    return local_ip_port
     
 #merges ip and port together for easy reference
-local_ip_addr = ipsetup.addresssetup()
-local_ip_port = ipsetup.portsetup()
+local_ip_addr = addresssetup()
+local_ip_port = portsetup()
 pro_api_url = "http://"+local_ip_addr+":"+local_ip_port
 
 
@@ -71,7 +73,7 @@ def grabmasks():
     masklist = []
     #assume the data first
     maskscontent = requests.get(pro_api_masks).json()
-    print(type(maskscontent))
+    # print(type(maskscontent))
     for maskshold in maskscontent:
         if type(maskshold) == dict:
             tempuuid = maskshold.get("uuid")
@@ -80,28 +82,30 @@ def grabmasks():
                 # elif key == "content":
                 #     masks.add_content = (maskshold[key])
         masklist.append(masks(tempuuid, tempname, tempindex))
-        print(masklist)
     print("ick")
+    return masklist
                 
 
-class masks:
-    """A Class for Masks"""
-    #info that I need from masks is uuid, name, indexs
-    def __init__(self, uuid, name, index):
-        #init function to grab the data lol
-        self.uuid = uuid
-        self.name = name
-        self.index = index
-        # self.content = []
 
-        
-    # def add_content(self, content):
-    #     self.content.append(content)
-        
-
+def grablooks():
+    lookslist = []
+    #assume the data first
+    lookscontent = requests.get(pro_api_looks).json()
+    # print(type(lookscontent))
+    for lookshold in lookscontent:
+        if "id" in lookshold:
+            if type(lookshold[0]) == dict:
+                print("pauseman")
+        if "screens" in lookshold:
+            if type(lookshold[1]) == list:
+                print("goman")
+                
+        # lookslist.append(looks(tempcmask, tempbmessages, tempbprops, tempbannouncements, tempcpresentation, tempbslide, tempbslide, tempbmedia, tempbvideoin))
+    
 
     
 grabmasks()
+grablooks()
 
 # print(masks.uuid)
 # print(masks.name)
